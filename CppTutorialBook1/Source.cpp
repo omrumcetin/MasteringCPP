@@ -9,6 +9,14 @@
 #include <chrono>
 using namespace std;
 
+enum colors{ red = 5 , black = 2};
+
+void swap(int* a, int* b)
+{
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
 
 void Show(vector<int> Arr)
 {
@@ -19,36 +27,57 @@ void Show(vector<int> Arr)
     cout << endl;
 }
 
-void trysome(int* som)
+void Trysome(int* som)
 {
     cout << "In try some :"<< som << endl;  
     som++;
     cout << "In try some :" << som << endl;
 }
 
+int Partition(vector<int> &Arr, int low, int high)
+{
+    // pivot (Element to be placed at right position)
+    auto pivot = Arr[high];
+
+    auto i = (low - 1);  // Index of smaller element and indicates the 
+                   // right position of pivot found so far
+
+    for (auto j = low; j <= high - 1; j++)
+    {
+        // If current element is smaller than the pivot
+        if (Arr[j] < pivot)
+        {
+            i++;    // increment index of smaller element
+            swap( &Arr[i], &Arr[j]);
+            Show(Arr);
+        }
+        Show(Arr);
+    }
+    swap(Arr[i + 1], Arr[high]);
+    Show(Arr);
+    return (i + 1);
+}
+
+void QuickSort(vector<int> &Arr, int Low, int High)
+{
+    if (Low < High)
+    {
+        auto partIndex = Partition( Arr, Low, High);
+
+        QuickSort(Arr, Low, partIndex -1);
+        QuickSort(Arr, partIndex + 1, High);
+    }
+}
 void main()
 {
     vector<int> a{ 65 , 24 , 15 , 8 , 94 , 111, 256 , 56, 15, 99};
 
     Show(a);
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    sort(a.begin(), a.end());
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    QuickSort(a, 0, a.size()-1);
+    Show(a);
 
-    clock_t end = clock();
-    cout << "Elapsed(ms) : " << (std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()) / 1000000.0 << endl;
-    for(size_t i = 0 ; i < a.size() ; i++)
-    {
-        cout << "Iteration " << i << endl;
-        for(size_t j = 0; j < a.size() - i - 1 ; j++)
-        {
-            if(a[j] > a[j+1])
-                std::swap(a.at(j), a.at(j+1));
-            Show(a);
-        }
-    }
-
-    trysome(&a[0]);
+    Trysome(&a[0]);
     cout << &a[0] << endl;
 
+    cout << red << endl;
 }
